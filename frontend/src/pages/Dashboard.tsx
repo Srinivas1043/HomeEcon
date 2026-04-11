@@ -37,7 +37,7 @@ export default function Dashboard() {
     queryKey: ['financial_forecast', transactions?.length, accounts?.length],
     queryFn: async () => {
       if (!transactions?.length || !accounts?.length) return null;
-      const res = await fetch('http://localhost:8000/api/v1/ai/forecast', {
+      const res = await fetch('/api/v1/ai/forecast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

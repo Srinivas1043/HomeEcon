@@ -237,7 +237,7 @@ export default function Transactions() {
         if (confirm(`Import ${mappedTransactionsRaw.length} expenses? AI will now summarize them.`)) {
             try {
                 // Call AI Backend for classification
-                const aiResponse = await fetch('http://localhost:8000/api/v1/ai/classify', {
+                const aiResponse = await fetch('/api/v1/ai/classify', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
