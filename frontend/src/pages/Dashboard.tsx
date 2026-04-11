@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import { Activity, Wallet, ArrowUpRight, ArrowDownRight, Sparkles, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../lib/api';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#00C49F', '#FF8042', '#0088FE', '#FFBB28'];
 
@@ -37,11 +38,11 @@ export default function Dashboard() {
     queryKey: ['financial_forecast', transactions?.length, accounts?.length],
     queryFn: async () => {
       if (!transactions?.length || !accounts?.length) return null;
-      const res = await fetch('/api/v1/ai/forecast', {
+      const res = await fetch(getApiUrl('/api/v1/ai/forecast'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          transactions: transactions.map(tx => ({ date: tx.date, amount: tx.amount, title: tx.title })),
+          transactions: transactions.map((tx: any) => ({ date: tx.date, amount: tx.amount, title: tx.title })),
           current_balances: accounts
         })
       });
@@ -54,7 +55,7 @@ export default function Dashboard() {
   const [showFortune, setShowFortune] = useState(false);
 
   // Data Processing
-  const totalBalance = accounts?.reduce((sum, acc) => sum + (acc.balance || 0), 0) || 0;
+  const totalBalance = accounts?.reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0) || 0;
   
   const monthlyData = transactions?.reduce((acc: any[], tx: any) => {
     const month = new Date(tx.date).toLocaleDateString('default', { month: 'short' });
@@ -72,7 +73,7 @@ export default function Dashboard() {
     return acc;
   }, []) || [];
 
-  const categoryData = transactions?.filter(tx => tx.type === 'EXPENSE').reduce((acc: any[], tx: any) => {
+  const categoryData = transactions?.filter((tx: any) => tx.type === 'EXPENSE').reduce((acc: any[], tx: any) => {
     const catName = tx.categories?.name || tx.metadata?.original_category || 'Uncategorized';
     const existing = acc.find(d => d.name === catName);
     if (existing) {
@@ -215,7 +216,7 @@ export default function Dashboard() {
                   data={categoryData}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value"
                 >
-                  {categoryData?.map((_, index: number) => (
+                  {categoryData?.map((_: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

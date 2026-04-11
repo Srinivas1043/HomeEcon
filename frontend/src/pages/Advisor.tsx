@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Sparkles, Send, BrainCircuit } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import { getApiUrl } from '../lib/api';
 
 export default function Advisor() {
   const [prompt, setPrompt] = useState('');
@@ -32,7 +33,7 @@ export default function Advisor() {
     setLoading(true);
     setResponse('');
     try {
-      const res = await fetch('/api/v1/ai/advisor', {
+      const res = await fetch(getApiUrl('/api/v1/ai/advisor'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

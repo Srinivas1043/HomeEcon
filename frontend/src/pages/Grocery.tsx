@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { Utensils, CalendarDays, ShoppingBag, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getApiUrl } from '../lib/api';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -80,7 +81,7 @@ export default function Grocery() {
     if (!newMealName) return;
     setIsAiLoading(true);
     try {
-      const res = await fetch('/api/v1/ai/ingredients', {
+      const res = await fetch(getApiUrl('/api/v1/ai/ingredients'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: newMealName })
@@ -98,7 +99,7 @@ export default function Grocery() {
     if (!items.length) return;
     setIsAiLoading(true);
     try {
-      const res = await fetch('/api/v1/ai/shopping_list/sort', {
+      const res = await fetch(getApiUrl('/api/v1/ai/shopping_list/sort'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items })
@@ -115,7 +116,7 @@ export default function Grocery() {
   // Compile Grocery List
   const groceryList = Array.from(new Set(
     plans?.flatMap((p: any) => p.meals?.ingredients || [])
-  )).sort();
+  )) as string[];
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>

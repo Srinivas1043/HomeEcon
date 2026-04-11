@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Plus, Receipt, Trash2, Edit2, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
+import { getApiUrl } from '../lib/api';
 
 export default function Transactions() {
   const queryClient = useQueryClient();
@@ -93,19 +94,7 @@ export default function Transactions() {
     }
   });
 
-  const { data: budgetData } = useQuery({
-    queryKey: ['budget_prediction'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('type', 'PREDICTION')
-        .order('date', { ascending: false })
-        .limit(1);
-      if (error) throw error;
-      return data?.[0] || null;
-    }
-  });
+  // budgetData was removed as it was unused
 
   // Map category names to IDs for easier insertion
   const categoryMap = categoriesData?.reduce((acc: any, cat: any) => {
@@ -113,7 +102,7 @@ export default function Transactions() {
     return acc;
   }, {});
 
-  const dynamicCategories = categoriesData?.map(c => c.name) || ['Food', 'Rent', 'Entertainment', 'Transport', 'Utilities'];
+  const dynamicCategories = categoriesData?.map((c: any) => c.name) || ['Food', 'Rent', 'Entertainment', 'Transport', 'Utilities'];
   
   // Ensure the selected category exists in the default list
   if (!dynamicCategories.includes('Income')) dynamicCategories.push('Income');
@@ -237,7 +226,7 @@ export default function Transactions() {
         if (confirm(`Import ${mappedTransactionsRaw.length} expenses? AI will now summarize them.`)) {
             try {
                 // Call AI Backend for classification
-                const aiResponse = await fetch('/api/v1/ai/classify', {
+                const aiResponse = await fetch(getApiUrl('/api/v1/ai/classify'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
