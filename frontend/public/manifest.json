@@ -1,0 +1,17 @@
+{
+  "name": "HomeEcon Dashboard",
+  "short_name": "HomeEcon",
+  "description": "Granular finance and life tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
