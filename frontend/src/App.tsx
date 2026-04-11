@@ -14,12 +14,23 @@ import Layout from './components/Layout';
 import './index.css';
 
 function App() {
+  const [configError, setConfigError] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      setConfigError('Supabase environment variables are missing. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Vercel Project Settings.');
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      setConfigError('Failed to connect to Supabase. Check your URL and Key.');
       setLoading(false);
     });
 
@@ -32,8 +43,44 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  if (configError) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh', 
+        padding: '20px',
+        textAlign: 'center',
+        background: '#0f172a',
+        color: '#f8fafc',
+        fontFamily: 'sans-serif'
+      }}>
+        <h2 style={{ color: '#ef4444' }}>Configuration Error</h2>
+        <p style={{ maxWidth: '500px', lineHeight: '1.6', opacity: 0.8 }}>{configError}</p>
+        <div style={{ marginTop: '24px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', fontSize: '14px' }}>
+          Check <b>Settings &rarr; Environment Variables</b> in your Vercel Dashboard.
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading HomeEcon...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        background: '#0f172a',
+        color: '#f8fafc'
+      }}>
+        <div className="spinner" style={{ marginBottom: '20px' }}></div>
+        Loading HomeEcon...
+      </div>
+    );
   }
 
   return (
