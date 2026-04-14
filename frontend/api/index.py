@@ -253,6 +253,7 @@ async def get_financial_forecast(request: ForecastRequest):
         print(f"Forecast AI Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/")
+@app.get("/api")
+@app.get("/api/")
 def read_root():
     return {"message": "Welcome to the HomeEcon API"}
