@@ -27,7 +27,7 @@ app.add_middleware(
 # Using Meta's Llama 3.3 70B Instruct for high quality JSON extraction
 hf_token = os.getenv("HF_API_TOKEN")
 client = InferenceClient(api_key=hf_token)
-MODEL_ID = "meta-llama/Llama-3.3-70B-Instruct"
+MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
 
 class AdvisorRequest(BaseModel):
     prompt: str
